@@ -3,6 +3,10 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const matter = require("gray-matter");
+const bodyParser = require("body-parser");
+const jsonParser = bodyParser.json();
+
+app.use(jsonParser);
 
 function getPosts() {
     const posts = [];
@@ -77,7 +81,8 @@ app.get("/sorted/:page", (req, res) => {
     return res.status(200).json(page);
 });
 
-app.post("/post", (req, res) => {
+app.post("/post", jsonParser, (req, res) => {
+    console.log(req.body);
     var slug = req.body.slug;
     var content = req.body.content;
     fs.writeFileSync("./pages/" + slug + ".md", content);
